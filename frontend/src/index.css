@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Bigshot+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+.App {
+  background-color: '#162447';
+}
+.block {
+  background-color: rgb(85, 85, 85);
+  height: 5px;
+  width: 28px;
+  margin-left: 18px;
+}
+.title-logo {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: rgb(85, 85, 85);
+  margin-left: 200px;
+  margin-right: 300px;
+  font-size: 24px;
+}
+
+.stock-name-big {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: rgb(85, 85, 85);
+  font-size: 100px;
+}
+.stock-name-small {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  color: rgb(85, 85, 85);
+  font-size: 40px;
+}
+
+.stock-title {
+  font-family: 'Alfa Slab One';
+  color: rgb(85, 85, 85);
+  margin-left: 18;
+  padding-bottom: 0;
+  margin-top: 20;
+}
