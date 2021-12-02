@@ -1,0 +1,37 @@
+{
+    "name": "Saul Mdo",
+    "img": "https://avatars.githubusercontent.com/u/29721482?v=4",
+    "cash": 973749.58,
+    "shares": [
+        {
+            "symbol": "TSLA",
+            "name": "Tesla Inc.",
+            "shares": 8
+        },
+        {
+            "symbol": "AAPL",
+            "name": "Apple Inc.",
+            "shares": 15
+        },
+        {
+            "symbol": "AMZN",
+            "name": "Amazon.com Inc.",
+            "shares": 3
+        },
+        {
+            "symbol": "FB",
+            "name": "Facebook Inc.",
+            "shares": 10
+        },
+        {
+            "symbol": "NFLX",
+            "name": "Netflix Inc.",
+            "shares": 8
+        },
+        {
+            "symbol": "AMD",
+            "name": "Advanced Micro Devices Inc.",
+            "shares": 2
+        }
+    ]
+}

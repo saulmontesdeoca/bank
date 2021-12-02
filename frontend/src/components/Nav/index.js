@@ -13,7 +13,7 @@ const NavBar = (props) => {
                     to="/" 
                     className={`nav-link ${location.pathname === '/' && 'active'}`}
                     >
-                        Home
+                        Portfolio
                 </Link>
                 <Link 
                     to="/stock"

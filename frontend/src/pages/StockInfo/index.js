@@ -10,7 +10,10 @@ const StockInfo = () => {
     const [info, setInfo] = useState({});
     const [numberShares, setNumberShares] = useState(0);
     const [subtotal, setSubtotal] = useState(0);
+    const [total, setTotal] = useState(0);
     const [errorBuy, setErrorBuy] = useState(false);
+
+    const dollar = 19.97;
 
     const getInfo = async () => {
         await axios.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${process.env.REACT_APP_API_KEY}`)
@@ -42,7 +45,7 @@ const StockInfo = () => {
             {
                 symbol: symbol,
                 shares: numberShares,
-                price: subtotal
+                price: total
             })
             .then(res => {
                 console.log(res);
@@ -68,7 +71,7 @@ const StockInfo = () => {
                     }
                     <Col>
                         <Row>
-                            <Col md={9}>
+                            <Col md={8}>
                                 {   info &&
                                     <>
                                     <Row>
@@ -191,7 +194,7 @@ const StockInfo = () => {
                             </Col>
                             <Col>
                                 {   info &&
-                                    <Card border="success" style={{ width: '18rem' }}>
+                                    <Card border="success" style={{ width: '21rem' }}>
                                         <Card.Header>Purchase</Card.Header>
                                         <Card.Body>
                                             <Card.Title>{symbol}</Card.Title>
@@ -205,15 +208,24 @@ const StockInfo = () => {
                                                         <Form.Control value={numberShares} onChange={e => {
                                                             setNumberShares(e.target.value);
                                                             setSubtotal(e.target.value * info.c);
+                                                            setTotal(e.target.value * info.c * dollar);
                                                         }} required type="number" placeholder="#" />
                                                     </Col>
                                                 </Form.Group>
                                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
                                                     <Form.Label column sm="8">
-                                                        Estimated total
+                                                        Subotal USD
                                                     </Form.Label>
                                                     <Col sm="4">
                                                         <Form.Control plaintext value={`$${subtotal}`} readOnly defaultValue={'1'} />
+                                                    </Col>
+                                                </Form.Group>
+                                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                                                    <Form.Label column sm="8">
+                                                        Total MXN
+                                                    </Form.Label>
+                                                    <Col sm="4">
+                                                        <Form.Control plaintext value={`$${total}`} readOnly defaultValue={'1'} />
                                                     </Col>
                                                 </Form.Group>
                                                 <Form.Group as={Row} className="mb-3">

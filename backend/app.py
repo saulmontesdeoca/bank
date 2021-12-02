@@ -24,7 +24,7 @@ def hello():
     return "Hello, World!"
 
 
-@app.route("/api/profile")
+@app.route("/api/profile/me")
 def profile():
     json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
     data = json.load(open(json_url))
@@ -43,7 +43,9 @@ def top():
         response = requests.get(request_url)
         if response.status_code != 404:
             response_json = response.json()
-            top_shares.append({"symbol": symbol, "price": response_json})
+            top_shares.append(
+                {"symbol": symbol, "price": response_json, "shares": share["shares"]}
+            )
 
     return json.dumps(top_shares)
 
@@ -53,13 +55,14 @@ def buy():
     symbol = request.json["symbol"]
     shares = request.json["shares"]
     price = request.json["price"]
+    print(shares)
     dollar = 19.97
 
     json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
     profile = json.load(open(json_url))
 
-    profile["cash"] -= price * shares * dollar
-    shares = profile["shares"]
+    profile["cash"] -= price
+    sharess = profile["shares"]
     found = False
     # "shares": [
     # {
@@ -67,10 +70,11 @@ def buy():
     #     "name": "Tesla Inc.",
     #     "shares": 8
     # },]
-    for stock in shares:
+    for stock in sharess:
         if stock["symbol"] == symbol:
-            stock["shares"] += shares
+            stock["shares"] += int(shares)
             found = True
+            print("found")
             break
     if not found:
         shares.append({"symbol": symbol, "shares": shares, "price": price})
