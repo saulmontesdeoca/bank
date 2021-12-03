@@ -95,7 +95,7 @@ const Stock = () => {
                         { top.result && top.result.map((item, index) => {
                             return (
                                 <div key={index} style={{marginBottom:12}}>
-                                    <Link to={`/stock/${item.symbol}`} style={{textDecoration: 'none'}}>
+                                    <Link to={`/stock/buy/${item.symbol}`} style={{textDecoration: 'none'}}>
                                     <Card style={{color: '#3f3f3f'}}>
                                         <Card.Body>
                                             <Row className='justify-content-between'>

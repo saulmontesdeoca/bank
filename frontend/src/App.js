@@ -5,7 +5,8 @@ import {
 } from 'react-router-dom'
 import Home from './pages/Home'
 import Stock from './pages/Stock'
-import StockInfo from './pages/StockInfo'
+import StockBuy from './pages/StockBuy'
+import StockSell from './pages/StockSell'
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Switch>
         <Route exact path='/' component={Home}/>
         <Route exact path='/stock' component={Stock}/>
-        <Route exact path="/stock/:symbol" component={StockInfo}/>
+        <Route exact path="/stock/buy/:symbol" component={StockBuy}/>
+        <Route exact path="/stock/sell/:symbol" component={StockSell}/>
       </Switch>
     </Router>
   );

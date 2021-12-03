@@ -31,6 +31,17 @@ def profile():
     return data
 
 
+@app.route("/api/profile/me/shares/<symbol>", methods=["GET"])
+def getShares(symbol):
+    json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
+    data = json.load(open(json_url))
+    shares = data["shares"]
+    for share in shares:
+        if share["symbol"] == symbol:
+            return json.dumps({"shares": share["shares"]})
+    return json.dumps([{"shares": 0}])
+
+
 @app.route("/api/get-top", methods=["GET"])
 def top():
     json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
@@ -61,6 +72,8 @@ def buy():
     json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
     profile = json.load(open(json_url))
 
+    if profile["cash"] - price < 0:
+        return json.dumps({"message": "Not enough funds"}), 400
     profile["cash"] -= price
     sharess = profile["shares"]
     found = False
@@ -78,6 +91,33 @@ def buy():
             break
     if not found:
         shares.append({"symbol": symbol, "shares": shares, "price": price})
+
+    json.dump(profile, open(json_url, "w"))
+    return json.dumps(profile)
+
+
+@app.route("/api/sell", methods=["POST"])
+def sell():
+    symbol = request.json["symbol"]
+    shares = request.json["shares"]
+    total = request.json["total"]
+    print(shares)
+    dollar = 19.97
+
+    json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
+    profile = json.load(open(json_url))
+
+    profile["cash"] += total
+    sharess = profile["shares"]
+    found = False
+    for stock in sharess:
+        if stock["symbol"] == symbol:
+            stock["shares"] -= int(shares)
+            found = True
+            print("found")
+            break
+    if not found:
+        return json.dumps({}), 404
 
     json.dump(profile, open(json_url, "w"))
     return json.dumps(profile)
