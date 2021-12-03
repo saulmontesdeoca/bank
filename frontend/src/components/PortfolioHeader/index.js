@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Card, Form, Button, Badge, Alert } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
-
+import separator from '../../services'
 const PortfolioHeader = (props) => {
     return (
         <div>
@@ -20,7 +20,7 @@ const PortfolioHeader = (props) => {
                             <Card.Body>
                             <Card.Title>Cash</Card.Title>
                             <Card.Text style={{fontSize: 32, fontWeight: 700}}>
-                                ${(Math.floor(props.profile.cash*100))/100}
+                                ${separator((Math.floor(props.profile.cash*100))/100)} MXN
                             </Card.Text>
                             </Card.Body>
                         </Card>
@@ -34,7 +34,7 @@ const PortfolioHeader = (props) => {
                             <Card.Body>
                             <Card.Title>Portfolio value</Card.Title>
                             <Card.Text style={{fontSize: 32, fontWeight: 700}}>
-                                $659304.65
+                                ${props.profile.shares && separator((props.profile.shares.reduce( (prev, current) => { return prev + current.total_price}, 0)).toFixed(2))} MXN
                             </Card.Text>
                             </Card.Body>
                         </Card>

@@ -48,7 +48,9 @@ const StockBuy = () => {
             {
                 symbol: symbol,
                 shares: numberShares,
-                price: total
+                unitPrice: info.c,
+                dollar: dollar,
+                stockName: info.name
             })
             .then(res => {
                 console.log(res);

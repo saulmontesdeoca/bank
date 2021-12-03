@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Card, Button } from 'react-bootstrap';
+import separator from '../../services'
 
 const ShareCard = ({item}) => {
     return (
@@ -14,11 +15,11 @@ const ShareCard = ({item}) => {
                             <p>{item.shares} shares</p>
                         </Col>
                         <Col md={3}>
-                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>${item.unit_price ? item.unit_price : 0}</h5>
+                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>${separator(item.unit_price && item.unit_price.toFixed(2))} MXN</h5>
                             <p>Unit Price</p>
                         </Col>
                         <Col md={3}>
-                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>${item.price.c ? item.price.c : 0}</h5>
+                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>${separator(item.total_price && item.total_price.toFixed(2))} MXN</h5>
                             <p>Total Price</p>
                         </Col>
                         <Col md={1}>

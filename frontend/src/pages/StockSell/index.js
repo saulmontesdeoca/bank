@@ -12,15 +12,16 @@ const StockSell = () => {
     const [numberShares, setNumberShares] = useState(0);
     const [subtotal, setSubtotal] = useState(0);
     const [total, setTotal] = useState(0);
+    const [profLoss, setProfLoss] = useState(0);
     const [errorSell, setErrorSell] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [myShares, setMyShares] = useState({});
+    const [myStock, setMyStock] = useState({});
     const dollar = 19.97;
 
-    const getMyShares = async () => {
-        await axios.get(`http://localhost:5000/api/profile/me/shares/${symbol}`)
+    const getMyStock = async () => {
+        await axios.get(`http://localhost:5000/api/profile/me/stock/${symbol}`)
             .then(res => {
-                setMyShares(res.data);
+                setMyStock(res.data.stock);
             })
             .catch(err => {
                 console.log(err);
@@ -57,7 +58,7 @@ const StockSell = () => {
             {
                 symbol: symbol,
                 shares: numberShares,
-                total: total,
+                dollar: dollar,
                 sharePrice: info.l
             })
             .then(res => {
@@ -72,10 +73,14 @@ const StockSell = () => {
 
     useEffect(() => {
         getInfo();
-        getMyShares();
+        getMyStock();
         setSubtotal(1 * info.l);
         setTotal(1 * info.l * dollar)
     }, []);
+
+    useEffect(()=> {
+        setProfLoss((numberShares * info.l * dollar) - (myStock.unit_price * numberShares));
+    }, [numberShares]);
 
     return (
         <Layout>
@@ -200,12 +205,12 @@ const StockSell = () => {
                                 }
                             </Col>
                             <Col>
-                                {   info && myShares.shares &&
+                                {   info && myStock &&
                                     <Card border="success" style={{ width: '21rem' }}>
                                         <Card.Header>Sell</Card.Header>
                                         <Card.Body>
                                             <Card.Title>{symbol}</Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">You have {myShares.shares} shares</Card.Subtitle>
+                                            <Card.Subtitle className="mb-2 text-muted">You have {myStock.shares} shares</Card.Subtitle>
                                             <Card.Subtitle className="mb-2 text-muted">Sell price ${info.l}</Card.Subtitle>
 
                                             <Form>
@@ -218,7 +223,7 @@ const StockSell = () => {
                                                             setNumberShares(e.target.value);
                                                             setSubtotal(e.target.value * info.l);
                                                             setTotal(e.target.value * info.l * dollar);
-                                                        }} required type="number" placeholder="#" max={myShares.shares} min={1} defaultValue={1}/>
+                                                        }} required type="number" placeholder="#" max={myStock.shares} min={1} defaultValue={1}/>
                                                     </Col>
                                                 </Form.Group>
                                                 <Form.Group as={Row} className="mb-3">
@@ -235,6 +240,14 @@ const StockSell = () => {
                                                     </Form.Label>
                                                     <Col sm="4">
                                                         <Form.Control plaintext value={`$${total}`} readOnly defaultValue={'1'} />
+                                                    </Col>
+                                                </Form.Group>
+                                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                                                    <Form.Label column sm="8">
+                                                        Profit/Loss based on portfolio unit price
+                                                    </Form.Label>
+                                                    <Col sm="4">
+                                                        <Form.Control plaintext value={`$${profLoss}`} readOnly defaultValue={'1'} />
                                                     </Col>
                                                 </Form.Group>
                                                 <Form.Group as={Row} className="mb-3">

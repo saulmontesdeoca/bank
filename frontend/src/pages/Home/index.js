@@ -41,7 +41,7 @@ const Home = () => {
                 profile &&
                 <>
                     <PortfolioHeader profile={profile}/>
-                    <Portfolio top={top}/>
+                    <Portfolio shares={profile.shares}/>
                 </>
             }
         </Layout>
