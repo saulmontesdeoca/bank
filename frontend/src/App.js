@@ -9,6 +9,8 @@ import StockBuy from './pages/StockBuy'
 import StockSell from './pages/StockSell'
 import Bonds from './pages/Bonds'
 import Forward from './pages/Forward'
+import PDF from './services/PDF'
+
 function App() {
   return (
     <Router>
@@ -19,7 +21,7 @@ function App() {
         <Route exact path="/stock/sell/:symbol" component={StockSell}/>
         <Route exact path="/forward/:symbol" component={Forward}/>
         <Route exact path="/bonds" component={Bonds}/>
-
+        <Route exact path="/letter" component={PDF}/>
       </Switch>
     </Router>
   );

@@ -5,6 +5,8 @@ import Contianer from 'react-bootstrap/Container'
 import Layout from '../../components/Layout';
 import StockInfo from '../../components/StockInfo';
 import axios from 'axios';
+import separator from '../../services';
+import { Link } from 'react-router-dom';
 
 const StockBuy = () => {
     const { symbol } = useParams();
@@ -111,6 +113,16 @@ const StockBuy = () => {
                         success &&
                         <Alert variant='success'>
                             Your purchase was successful
+                            <Link to={{
+                                pathname: '/letter',
+                                symbol: symbol,
+                                shares: numberShares,
+                                unitPrice: info.c,
+                                dollar: dollar,
+                                stockName: info.name
+                            }} style={{textDecoration: 'none'}}>
+                            <Button variant="light" style={{marginLeft: 50}}>Get Confirmation Letter</Button>
+                            </Link>
                         </Alert>
                     }
                     <Col>
@@ -255,7 +267,7 @@ const StockBuy = () => {
                                                             Total MXN
                                                         </Form.Label>
                                                         <Col sm="5">
-                                                            <Form.Control plaintext value={`$${total}`} readOnly defaultValue={'1'} />
+                                                            <Form.Control plaintext value={`$${separator(total)}`} readOnly defaultValue={'1'} />
                                                         </Col>
                                                     </Form.Group>
                                                     <Form.Group as={Row} className="mb-3">
