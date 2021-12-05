@@ -27,12 +27,6 @@ const NavBar = (props) => {
                     >
                         Bonds
                 </Link>
-                <Link 
-                    to="/var"
-                    className={`nav-link ${location.pathname === '/var' && 'active'}`}
-                    >
-                        VaR Dollar
-                </Link>
             </Nav>
         </Navbar>
     );
