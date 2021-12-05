@@ -4,8 +4,9 @@ import Container from 'react-bootstrap/Container';
 import Var from '../../pages/Var';
 import ForwardCard from '../ForwardCard';
 import ShareCard from '../ShareCard';
+import BondCard from '../BondCard';
 
-const Portfolio = ({shares, forwards}) => {
+const Portfolio = ({shares, forwards, bonds}) => {
     return (
         <Container>
             <Row className='mt-3'>
@@ -31,6 +32,20 @@ const Portfolio = ({shares, forwards}) => {
                         shares.map(item => {
                             return (
                                 <ForwardCard item={item}/>
+                            )
+                        })
+                    }
+                </Col>
+            </Row>
+            <Row className='mt-3'>
+                <Col>
+                    <h5 className='stock-title'>Bonds</h5>
+                    <div className='block' style={{marginBottom: 24}}></div>
+                    {
+                        bonds && 
+                        bonds.map(item => {
+                            return (
+                                <BondCard item={item}/>
                             )
                         })
                     }

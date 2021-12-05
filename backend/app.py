@@ -198,3 +198,47 @@ def get_var():
         var_99 = profit_and_loss[2]
         var_95 = profit_and_loss[14]
         return json.dumps({"var99": var_99, "var95": var_95, "table": var_table})
+
+
+@app.route("/api/buy/bonds", methods=["POST"])
+def buy_bonds():
+    investment = float(request.json["investment"])
+    rate = float(request.json["rate"])
+
+    json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
+    profile = json.load(open(json_url))
+
+    # update cash
+    if profile["cash"] - investment < 0:
+        return json.dumps({"message": "Not enough funds"}), 400
+    profile["cash"] -= investment
+
+    subtotal_profit = investment * rate / 100
+
+    isr = subtotal_profit * 0.16
+
+    profit = subtotal_profit - isr
+
+    profile["bonds"].append(
+        {"investment": investment, "rate": rate, "isr": isr, "profit": profit}
+    )
+
+    json.dump(profile, open(json_url, "w"))
+    return json.dumps({"isr": isr, "profit": profit})
+
+
+@app.route("/api/collect/bonds", methods=["POST"])
+def collect_bonds():
+    json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
+    profile = json.load(open(json_url))
+
+    bond = profile["bonds"].pop()
+
+    profit = bond["profit"]
+    investment = bond["investment"]
+    # update cash
+    profile["cash"] += investment
+    profile["cash"] += profit
+
+    json.dump(profile, open(json_url, "w"))
+    return json.dumps({"profit": profit})

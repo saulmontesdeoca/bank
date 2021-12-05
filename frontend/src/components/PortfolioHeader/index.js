@@ -39,6 +39,20 @@ const PortfolioHeader = (props) => {
                             </Card.Body>
                         </Card>
                     </Col>
+                    <Col>
+                        <Card
+                            bg='secondary'
+                            text='white'
+                            className="mb-2"
+                        >
+                            <Card.Body>
+                            <Card.Title>Profit/Loss calculated from last top up ($1,500,000 MXN)</Card.Title>
+                            <Card.Text style={{fontSize: 32, fontWeight: 700}}>
+                                ${props.profile.shares && separator((props.profile.shares.reduce( (prev, current) => { return prev + current.total_price}, 0) + props.profile.cash - 1500000).toFixed(2))} MXN
+                            </Card.Text>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 </Row>
             </Container>
         </div>
