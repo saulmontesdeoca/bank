@@ -22,12 +22,17 @@ const NavBar = (props) => {
                         Stock
                 </Link>
                 <Link 
-                    to="/options"
-                    className={`nav-link ${location.pathname === '/options' && 'active'}`}
+                    to="/bonds"
+                    className={`nav-link ${location.pathname === '/bonds' && 'active'}`}
                     >
-                        Options
+                        Bonds
                 </Link>
-
+                <Link 
+                    to="/var"
+                    className={`nav-link ${location.pathname === '/var' && 'active'}`}
+                    >
+                        VaR Dollar
+                </Link>
             </Nav>
         </Navbar>
     );

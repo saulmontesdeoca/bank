@@ -5,6 +5,7 @@ import finnhub
 from flask_cors import CORS
 
 import requests
+import csv
 
 app = Flask(__name__)
 load_dotenv()
@@ -143,3 +144,57 @@ def sell():
 def get_stock(symbol):
     quote = finnhub_client.quote(symbol)
     return json.dumps(quote)
+
+
+@app.route("/api/var", methods=["POST"])
+def get_var():
+    dollar_records = os.path.join(SITE_ROOT, SITE_FOLDER, "usd_mxn.csv")
+
+    tc_today = request.json["tc_today"]
+    usd_position = request.json["usd_position"]
+
+    tc_today = float(tc_today)
+    usd_position = float(usd_position)
+
+    with open(dollar_records) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        spots = []
+        for row in csv_reader:
+            spots.append(row[0])
+        spots = reversed(spots)
+        table = []
+        for spot in spots:
+            table.append([spot])
+
+        # adding fluctuations
+        table[0][0] = float(table[0][0])
+        table[0].append(0)
+        table[-1][0] = 21.273
+        for i in range(1, len(table)):
+            table[i][0] = float(table[i][0])
+            fluctuation = round(((table[i][0] / table[i - 1][0]) - 1) * 100, 2)
+            table[i].append(fluctuation)
+
+        # adding TC tomorrow and val tomorrow
+        # tc_today = table[-1][0]
+        # usd_position = 1000000
+        mxn_posiotion = usd_position * tc_today
+        profit_and_loss = []
+        for i in range(1, len(table)):
+            tc_estimated = tc_today * (1 + table[i][1] / 100)
+            val_tomorrow = usd_position * tc_estimated
+            p_and_l = val_tomorrow - mxn_posiotion
+            table[i].append(round(tc_estimated, 4))
+            table[i].append(round(val_tomorrow, 4))
+            table[i].append(round(p_and_l, 4))
+            profit_and_loss.append(round(p_and_l, 4))
+
+        profit_and_loss.sort()
+        # to see where is var at 99 and var at 95
+        var_table = []
+        for i in range(16):
+            var_table.append([round(((i + 1) / 282) * 100, 2), profit_and_loss[i]])
+
+        var_99 = profit_and_loss[2]
+        var_95 = profit_and_loss[14]
+        return json.dumps({"var99": var_99, "var95": var_95, "table": var_table})

@@ -6,18 +6,12 @@ import Layout from '../../components/Layout';
 import StockInfo from '../../components/StockInfo';
 import axios from 'axios';
 
-const StockBuy = () => {
+const Forward = () => {
     const { symbol } = useParams();
     const [info, setInfo] = useState({});
     const [numberShares, setNumberShares] = useState(0);
     const [subtotal, setSubtotal] = useState(0);
     const [total, setTotal] = useState(0);
-
-    const [numberSharesForward, setNumberSharesForward] = useState(0);
-    const [subtotalForward, setSubtotalForward] = useState(0);
-    const [totalForward, setTotalForward] = useState(0);
-    const [forwardPrice, setForwardPrice] = useState(0);
-
     const [success, setSuccess] = useState(false);
     const [errorBuy, setErrorBuy] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -199,116 +193,48 @@ const StockBuy = () => {
                             </Col>
                             <Col>
                                 {   info &&
-                                <>
-                                    <Row>
-                                        <Card className='p-0' border="success" style={{ width: '21rem' }}>
-                                            <Card.Header>Purchase Shares</Card.Header>
-                                            <Card.Body>
-                                                <Card.Title>{symbol}</Card.Title>
-                                                <Card.Subtitle className="mb-2 text-muted">${info.c}</Card.Subtitle>
-                                                <Form>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                                        <Form.Label column sm="8">
-                                                            Shares
-                                                        </Form.Label>
-                                                        <Col sm="4">
-                                                            <Form.Control value={numberShares} onChange={e => {
-                                                                setNumberShares(e.target.value);
-                                                                setSubtotal(e.target.value * info.c);
-                                                                setTotal(e.target.value * info.c * dollar);
-                                                            }} required type="number" placeholder="#" min={1} defaultValue={1}/>
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                        <Form.Label column sm="7">
-                                                            Subotal USD
-                                                        </Form.Label>
-                                                        <Col sm="5">
-                                                            <Form.Control plaintext value={`$${subtotal}`} readOnly defaultValue={'1'} />
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                        <Form.Label column sm="7">
-                                                            Total MXN
-                                                        </Form.Label>
-                                                        <Col sm="5">
-                                                            <Form.Control plaintext value={`$${total}`} readOnly defaultValue={'1'} />
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3">
-                                                        <Col className='d-grid gap-2'>
-                                                            <Button onClick={handleBuy} variant="outline-success" size="md">Buy</Button>
-                                                        </Col>
-                                                    </Form.Group>
-                                                </Form>
-                                            </Card.Body>
-                                        </Card>
-                                    </Row>
-                                    <Row className='mt-5'>
-                                        <Card className='p-0' border="primary" style={{ width: '21rem' }}>
-                                            <Card.Header>Forward</Card.Header>
-                                            <Card.Body>
-                                                <Card.Title>{symbol}</Card.Title>
-                                                {/* <Card.Subtitle className="mb-2 text-muted">Margin 0.06</Card.Subtitle> */}
-                                                <Form>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                                        <Form.Label column sm="8">
-                                                            Shares
-                                                        </Form.Label>
-                                                        <Col sm="4">
-                                                            <Form.Control value={numberSharesForward} onChange={e => {
-                                                                setNumberSharesForward(e.target.value);
-                                                                setSubtotalForward(forwardPrice * numberSharesForward);
-                                                                setTotalForward(forwardPrice * numberSharesForward * dollar);
-                                                            }} required type="number" placeholder="#" min={1} defaultValue={1}/>
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                        <Form.Label column sm="7">
-                                                            Counted Price USD
-                                                        </Form.Label>
-                                                        <Col sm="5">
-                                                            <Form.Control plaintext value={`$${info.c}`} readOnly defaultValue={'1'} />
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                                        <Form.Label column sm="6">
-                                                            Forward Price
-                                                        </Form.Label>
-                                                        <Col sm="6">
-                                                            <Form.Control value={forwardPrice} onChange={e => {
-                                                                setForwardPrice(e.target.value);
-                                                                setSubtotalForward(e.target.value * numberSharesForward);
-                                                                setTotalForward(e.target.value * numberSharesForward * dollar);
-                                                            }} required type="number" placeholder="#" min={info.c*1.0001} defaultValue={1}/>
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                        <Form.Label column sm="7">
-                                                            Subotal USD
-                                                        </Form.Label>
-                                                        <Col sm="5">
-                                                            <Form.Control plaintext value={`$${subtotalForward}`} readOnly defaultValue={'1'} />
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                        <Form.Label column sm="7">
-                                                            Total MXN
-                                                        </Form.Label>
-                                                        <Col sm="5">
-                                                            <Form.Control plaintext value={`$${totalForward}`} readOnly defaultValue={'1'} />
-                                                        </Col>
-                                                    </Form.Group>
-                                                    <Form.Group as={Row} className="mb-3">
-                                                        <Col className='d-grid gap-2'>
-                                                            <Button onClick={handleBuy} variant="outline-success" size="md">Buy</Button>
-                                                        </Col>
-                                                    </Form.Group>
-                                                </Form>
-                                            </Card.Body>
-                                        </Card>
-                                    </Row>
-                                </>
+                                    <Card border="success" style={{ width: '21rem' }}>
+                                        <Card.Header>Purchase</Card.Header>
+                                        <Card.Body>
+                                            <Card.Title>{symbol}</Card.Title>
+                                            <Card.Subtitle className="mb-2 text-muted">${info.c}</Card.Subtitle>
+                                            <Form>
+                                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                                                    <Form.Label column sm="8">
+                                                        Shares
+                                                    </Form.Label>
+                                                    <Col sm="4">
+                                                        <Form.Control value={numberShares} onChange={e => {
+                                                            setNumberShares(e.target.value);
+                                                            setSubtotal(e.target.value * info.c);
+                                                            setTotal(e.target.value * info.c * dollar);
+                                                        }} required type="number" placeholder="#" min={1} defaultValue={1}/>
+                                                    </Col>
+                                                </Form.Group>
+                                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                                                    <Form.Label column sm="8">
+                                                        Subotal USD
+                                                    </Form.Label>
+                                                    <Col sm="4">
+                                                        <Form.Control plaintext value={`$${subtotal}`} readOnly defaultValue={'1'} />
+                                                    </Col>
+                                                </Form.Group>
+                                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                                                    <Form.Label column sm="8">
+                                                        Total MXN
+                                                    </Form.Label>
+                                                    <Col sm="4">
+                                                        <Form.Control plaintext value={`$${total}`} readOnly defaultValue={'1'} />
+                                                    </Col>
+                                                </Form.Group>
+                                                <Form.Group as={Row} className="mb-3">
+                                                    <Col className='d-grid gap-2'>
+                                                        <Button onClick={handleBuy} variant="outline-success" size="md">Buy</Button>
+                                                    </Col>
+                                                </Form.Group>
+                                            </Form>
+                                        </Card.Body>
+                                    </Card>
                                 }
                             </Col>
                         </Row>
@@ -319,4 +245,4 @@ const StockBuy = () => {
     );
 };
 
-export default StockBuy;
+export default Forward;
