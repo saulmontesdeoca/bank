@@ -242,3 +242,90 @@ def collect_bonds():
 
     json.dump(profile, open(json_url, "w"))
     return json.dumps({"profit": profit})
+
+
+@app.route("/api/forward", methods=["POST"])
+def forward():
+    symbol = request.json["symbol"]
+    shares = request.json["shares"]
+    unit_price = request.json["unitPrice"]
+    dollar = request.json["dollar"]
+    stock_name = request.json["stockName"]
+    forward_price = float(request.json["forwardPrice"])
+    term = float(request.json["term"])
+
+    json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
+    profile = json.load(open(json_url))
+
+    # update shares
+    forwards = profile["forwards"]
+    forwards.append(
+        {
+            "name": stock_name,
+            "symbol": symbol,
+            "shares": int(shares),
+            "term": term,
+            "unit_price": unit_price * dollar,
+            "forward_price": forward_price * dollar,
+            "total_price": forward_price * dollar * int(shares),
+        }
+    )
+
+    json.dump(profile, open(json_url, "w"))
+    return json.dumps(profile)
+
+
+@app.route("/api/exercise", methods=["POST"])
+def exercise():
+    symbol = request.json["symbol"]
+    price_today = request.json["priceToday"]
+
+    json_url = os.path.join(SITE_ROOT, SITE_FOLDER, "data.json")
+    profile = json.load(open(json_url))
+
+    # update forward obtain profit loss
+    forwards = profile["forwards"]
+
+    forwardsToProfile = []
+    for forward in forwards:
+        if forward["symbol"] == symbol:
+            shares = forward["shares"]
+            forward_price = forward["forward_price"]
+            profitLoss = (price_today - forward_price) * int(shares)
+            stock_name = forward["name"]
+            continue
+        forwardsToProfile.append(forward)
+
+    profile["forwards"] = forwardsToProfile
+
+    ######## buy shares #######
+    total_price = float(forward_price) * int(shares)
+
+    # update cash
+    profile["cash"] -= total_price
+
+    # update shares
+    sharess = profile["shares"]
+    found = False
+    for stock in sharess:
+        if stock["symbol"] == symbol:
+            stock["shares"] += int(shares)
+            # Netting
+            stock["unit_price"] = (stock["total_price"] + total_price) / stock["shares"]
+            stock["total_price"] = stock["unit_price"] * stock["shares"]
+            found = True
+            print("found")
+            break
+    if not found:
+        sharess.append(
+            {
+                "name": stock_name,
+                "symbol": symbol,
+                "shares": int(shares),
+                "unit_price": forward_price,
+                "total_price": forward_price * int(shares),
+            }
+        )
+
+    json.dump(profile, open(json_url, "w"))
+    return json.dumps({"profitLoss": profitLoss})

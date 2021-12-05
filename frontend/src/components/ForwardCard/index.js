@@ -19,19 +19,15 @@ const ForwardCard = ({item}) => {
                             <p>Unit Price</p>
                         </Col>
                         <Col md={2}>
-                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>${separator(item.total_price && item.total_price.toFixed(2))} MXN</h5>
+                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>${separator(item.forward_price && item.forward_price.toFixed(2))} MXN</h5>
                             <p>Forward Price</p>
                         </Col>
-                        <Col md={2}>
-                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>Sat Sep 25 2021</h5>
-                            <p>Purchase Date</p>
-                        </Col>
                         <Col md={1}>
-                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>120 days</h5>
+                            <h5 style={{fontFamily: 'Work Sans', color: '#3f3f3f'}}>{item.term} days</h5>
                             <p>Term</p>
                         </Col>
                         <Col md={1}>
-                            <Link to={`/stock/sell/${item.symbol}`} style={{textDecoration: 'none'}}>
+                            <Link to={`/forward/${item.symbol}`} style={{textDecoration: 'none'}}>
                                 <Button variant="primary">Exercise</Button>
                             </Link>
                         </Col>

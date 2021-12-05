@@ -5,18 +5,15 @@ import Contianer from 'react-bootstrap/Container'
 import Layout from '../../components/Layout';
 import StockInfo from '../../components/StockInfo';
 import axios from 'axios';
+import { useHistory } from 'react-router';
 
 const Forward = () => {
     const { symbol } = useParams();
+    const history = useHistory();
     const [info, setInfo] = useState({});
-    const [numberShares, setNumberShares] = useState(0);
-    const [subtotal, setSubtotal] = useState(0);
-    const [total, setTotal] = useState(0);
-    const [success, setSuccess] = useState(false);
-    const [errorBuy, setErrorBuy] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [priceToday, setPriceToday] = useState(0);
 
-    const dollar = 19.97;
+    const dollar = 21.07;
 
     const getInfo = async () => {
         await axios.get(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${process.env.REACT_APP_API_KEY}`)
@@ -43,47 +40,30 @@ const Forward = () => {
             })
     }
 
-    const handleBuy = async () => {
-        await axios.post('http://localhost:5000/api/buy', 
+    const handleExercise = async () => {
+        await axios.post('http://localhost:5000/api/exercise', 
             {
                 symbol: symbol,
-                shares: numberShares,
-                unitPrice: info.c,
-                dollar: dollar,
-                stockName: info.name
+                priceToday: priceToday * dollar
             })
             .then(res => {
                 console.log(res);
-                setSuccess(true);
+                alert('Exercise successful. Profit/Loss: ' + res.data.profitLoss);
+                history.push('/');
             })
             .catch(err => {
                 console.log(err);
-                setErrorBuy(true);
-                setErrorMessage("Not enough funds");
             })
     }
 
     useEffect(() => {
         getInfo();
-        setSubtotal(1 * info.l);
-        setTotal(1 * info.l * dollar)
     }, []);
 
     return (
         <Layout>
             <Contianer>
                 <Row>
-                    { errorBuy &&
-                    <Alert variant='danger'>
-                        There was an error buying the stock: {errorMessage && errorMessage}
-                    </Alert>
-                    }
-                    {
-                        success &&
-                        <Alert variant='success'>
-                            Your purchase was successful
-                        </Alert>
-                    }
                     <Col>
                         <Row>
                             <Col md={8}>
@@ -193,43 +173,32 @@ const Forward = () => {
                             </Col>
                             <Col>
                                 {   info &&
-                                    <Card border="success" style={{ width: '21rem' }}>
-                                        <Card.Header>Purchase</Card.Header>
+                                    <Card border="secondary" style={{ width: '21rem' }}>
+                                        <Card.Header>Exercise</Card.Header>
                                         <Card.Body>
-                                            <Card.Title>{symbol}</Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">${info.c}</Card.Subtitle>
+                                            <Card.Title>My {symbol} forward</Card.Title>
                                             <Form>
                                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                                    <Form.Label column sm="8">
-                                                        Shares
+                                                    <Form.Label column sm="7">
+                                                        Share Price today (USD)
                                                     </Form.Label>
-                                                    <Col sm="4">
-                                                        <Form.Control value={numberShares} onChange={e => {
-                                                            setNumberShares(e.target.value);
-                                                            setSubtotal(e.target.value * info.c);
-                                                            setTotal(e.target.value * info.c * dollar);
+                                                    <Col sm="5">
+                                                        <Form.Control value={priceToday} onChange={e => {
+                                                            setPriceToday(e.target.value);
                                                         }} required type="number" placeholder="#" min={1} defaultValue={1}/>
                                                     </Col>
                                                 </Form.Group>
                                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                    <Form.Label column sm="8">
-                                                        Subotal USD
-                                                    </Form.Label>
-                                                    <Col sm="4">
-                                                        <Form.Control plaintext value={`$${subtotal}`} readOnly defaultValue={'1'} />
-                                                    </Col>
-                                                </Form.Group>
-                                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                                                    <Form.Label column sm="8">
-                                                        Total MXN
-                                                    </Form.Label>
-                                                    <Col sm="4">
-                                                        <Form.Control plaintext value={`$${total}`} readOnly defaultValue={'1'} />
-                                                    </Col>
-                                                </Form.Group>
+                                                        <Form.Label column sm="7">
+                                                            Share Price today (MXN)
+                                                        </Form.Label>
+                                                        <Col sm="5">
+                                                            <Form.Control plaintext value={`$${priceToday * dollar}`} readOnly defaultValue={'1'} />
+                                                        </Col>
+                                                    </Form.Group>
                                                 <Form.Group as={Row} className="mb-3">
                                                     <Col className='d-grid gap-2'>
-                                                        <Button onClick={handleBuy} variant="outline-success" size="md">Buy</Button>
+                                                        <Button onClick={handleExercise} variant="outline-secondary" size="md">Exercise</Button>
                                                     </Col>
                                                 </Form.Group>
                                             </Form>

@@ -28,8 +28,8 @@ const Portfolio = ({shares, forwards, bonds}) => {
                     <h5 className='stock-title'>Forwards</h5>
                     <div className='block' style={{marginBottom: 24}}></div>
                     {
-                        shares && 
-                        shares.map(item => {
+                        forwards && 
+                        forwards.map(item => {
                             return (
                                 <ForwardCard item={item}/>
                             )

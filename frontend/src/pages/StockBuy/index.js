@@ -17,6 +17,7 @@ const StockBuy = () => {
     const [subtotalForward, setSubtotalForward] = useState(0);
     const [totalForward, setTotalForward] = useState(0);
     const [forwardPrice, setForwardPrice] = useState(0);
+    const [term, setTerm] = useState(0);
 
     const [success, setSuccess] = useState(false);
     const [errorBuy, setErrorBuy] = useState(false);
@@ -57,6 +58,28 @@ const StockBuy = () => {
                 unitPrice: info.c,
                 dollar: dollar,
                 stockName: info.name
+            })
+            .then(res => {
+                console.log(res);
+                setSuccess(true);
+            })
+            .catch(err => {
+                console.log(err);
+                setErrorBuy(true);
+                setErrorMessage("Not enough funds");
+            })
+    }
+
+    const handleForward = async () => {
+        await axios.post('http://localhost:5000/api/forward', 
+            {
+                symbol: symbol,
+                shares: numberSharesForward,
+                unitPrice: info.c,
+                dollar: dollar,
+                stockName: info.name,
+                term: term,
+                forwardPrice: forwardPrice
             })
             .then(res => {
                 console.log(res);
@@ -253,6 +276,16 @@ const StockBuy = () => {
                                                 <Form>
                                                     <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                                                         <Form.Label column sm="8">
+                                                            Term (days)
+                                                        </Form.Label>
+                                                        <Col sm="4">
+                                                            <Form.Control value={term} onChange={e => {
+                                                                setTerm(e.target.value);
+                                                            }} required type="number" placeholder="#" min={1} defaultValue={1}/>
+                                                        </Col>
+                                                    </Form.Group>
+                                                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                                                        <Form.Label column sm="8">
                                                             Shares
                                                         </Form.Label>
                                                         <Col sm="4">
@@ -301,7 +334,7 @@ const StockBuy = () => {
                                                     </Form.Group>
                                                     <Form.Group as={Row} className="mb-3">
                                                         <Col className='d-grid gap-2'>
-                                                            <Button onClick={handleBuy} variant="outline-success" size="md">Buy</Button>
+                                                            <Button onClick={handleForward} variant="outline-success" size="md">Buy</Button>
                                                         </Col>
                                                     </Form.Group>
                                                 </Form>
